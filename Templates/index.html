@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>California Housing Predictor</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Cal<span>Home.</span></div>
+        <div class="nav-text">AI Housing Prediction</div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge">MACHINE LEARNING POWERED</span>
+
+            <h1>Find Your Home's<br>
+                <span>Estimated Value.</span>
+            </h1>
+
+            <p>
+                Enter your housing details and let machine learning
+                estimate the median house value in California.
+            </p>
+
+            <div class="hero-stats">
+                <div>
+                    <h3>Smart</h3>
+                    <p>ML Predictions</p>
+                </div>
+
+                <div>
+                    <h3>Instant</h3>
+                    <p>Results</p>
+                </div>
+
+                <div>
+                    <h3>Simple</h3>
+                    <p>Experience</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-decoration">
+            <div class="circle circle-one"></div>
+            <div class="circle circle-two"></div>
+
+            <div class="house-card">
+                <div class="house-icon">⌂</div>
+                <h3>California</h3>
+                <p>Housing Insights</p>
+                <div class="house-line"></div>
+                <div class="house-line short"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prediction Form -->
+    <main class="main-container">
+
+        <div class="section-heading">
+            <span class="section-label">PREDICTION TOOL</span>
+            <h2>Enter Housing Details</h2>
+            <p>Complete all the fields below to calculate the estimated value.</p>
+        </div>
+
+        <div class="form-card">
+
+            {% if error %}
+                <div class="alert error">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form action="{{ url_for('predict') }}" method="POST">
+
+                <div class="input-grid">
+
+                    {% for column in columns %}
+                    <div class="input-group">
+
+                        <label for="{{ column }}">
+                            {{ column.replace('_', ' ') | title }}
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            id="{{ column }}"
+                            name="{{ column }}"
+                            placeholder="Enter {{ column.replace('_', ' ') }}"
+                            value="{{ values.get(column, '') if values else '' }}"
+                            required
+                        >
+
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <button type="submit" class="predict-btn">
+                    Predict House Value
+                    <span>→</span>
+                </button>
+
+                <p class="form-note">
+                    Please enter values in the units expected by your model.
+                </p>
+
+            </form>
+
+            <!-- Prediction Result -->
+            {% if prediction is defined %}
+            <div class="result-card">
+
+                <div class="result-icon">✓</div>
+
+                <div class="result-info">
+                    <p class="result-label">PREDICTED MEDIAN HOUSE VALUE</p>
+
+                    <h2>{{ prediction }}</h2>
+
+                    <p class="result-description">
+                        Prediction generated successfully using your
+                        trained machine learning model.
+                    </p>
+                </div>
+
+            </div>
+            {% endif %}
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>California Housing Predictor · Machine Learning Project</p>
+    </footer>
+
+</body>
+</html>
